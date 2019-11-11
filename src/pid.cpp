@@ -41,6 +41,18 @@ void drivePID(signed int direzione, float vMot) {
   speed3 = constrain(speed3, -255, 255);
   speed4 = constrain(speed4, -255, 255);
 
+  speed1 = (int)speed1 > 0 ? map((int)speed1, 1, 255, 35, 255) : speed1;        //maggiore efficienza dei motori
+  speed2 = (int)speed2 > 0 ? map((int)speed2, 1, 255, 35, 255) : speed2;        //maggiore efficienza dei motori
+  speed3 = (int)speed3 > 0 ? map((int)speed3, 1, 255, 35, 255) : speed3;        //maggiore efficienza dei motori
+  speed4 = (int)speed4 > 0 ? map((int)speed4, 1, 255, 35, 255) : speed4;        //maggiore efficienza dei motori
+
+  speed1 = (int)speed1 < 0 ? map((int)speed1, -255, -1, -255, -35) : speed1;        //maggiore efficienza dei motori
+  speed2 = (int)speed2 < 0 ? map((int)speed2, -255, -1, -255, -35) : speed2;        //maggiore efficienza dei motori
+  speed3 = (int)speed3 < 0 ? map((int)speed3, -255, -1, -255, -35) : speed3;        //maggiore efficienza dei motori
+  speed4 = (int)speed4 < 0 ? map((int)speed4, -255, -1, -255, -35) : speed4;        //maggiore efficienza dei motori
+
+
+
   // Send every speed to his motor
   mot(1, int(speed1));
   mot(2, int(speed2));

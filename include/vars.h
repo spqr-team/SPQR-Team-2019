@@ -34,9 +34,9 @@
 #define SUD_EST 9
 
 // VARIABILI E COSTANTI DEL PID
-#define KP 2   // K proporzionale
-#define KI 0.1 // K integrativo
-#define KD 1.7   // K derivativo
+#define KP 1.2          //2     // K proporzionale
+#define KI 0            //0.1   // K integrativo
+#define KD 0.7          //1.7   // K derivativo
 
 // Linesensors e interrupt
 #define S1I A14

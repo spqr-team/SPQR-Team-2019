@@ -177,7 +177,7 @@ void loop() {
   // Ao();
   // com(500);
 
-  comrade = true;
+  // comrade = true;
 
   if(comrade) {
     if(ball_seen){
@@ -185,7 +185,8 @@ void loop() {
       else keeper();
     } else {
       if(role){
-        goCenter();
+        // goCenter();
+        preparePID(0,0,0);
         digitalWrite(Y, LOW);
       }
       else centerGoalPostCamera(true);
@@ -198,8 +199,17 @@ void loop() {
   AAANGOLO(); 
 
   checkLineSensors();                           //Last thing in loop, for priority
-  safetysafe();
-
+  // safetysafe();
 
   drivePID(globalDir, globalSpeed);
+  // for(int i = 0; i <= 255; i+= 10) {
+  //   turnMotor(2, 1, 0, 50);
+  //   if(i >= 255) i = 0;
+  //   Serial.print(i);
+  //   Serial.print(", ");
+  //   while(!Serial.available());
+  //   Serial.println(Serial.parseFloat(),4);
+  //   while(Serial.available()) Serial.read();
+  // } 
+  
 }
