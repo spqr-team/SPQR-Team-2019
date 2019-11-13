@@ -50,18 +50,6 @@
 
 #define LINE_THRESH 90
 #define EXTIME 100
-extr bool bounds;
-extr bool slow;
-extr elapsedMillis exitTimer;
-
-extr int LN1I;
-extr int LN2I;
-extr int LN3I;
-extr int LN4I;
-extr int LN1O;
-extr int LN2O;
-extr int LN3O;
-extr int LN4O;
 
 #define BNO055_SAMPLERATE_DELAY_MS (60)
 
@@ -70,12 +58,8 @@ extr int LN4O;
 #define CAMERA Serial2
 #define NANO_BALL Serial4
 
-
 // IMU
 extr int imu_current_euler;
-
-// Line Sensors
-extr byte lineReading;
 
 //Read ball
 extr int ball_degrees, ball_distance;
@@ -91,8 +75,26 @@ extr int prevPidSpeed;
 extr int globalDir;
 extr int globalSpeed;
 // Motors
-extr float vx, vy, speed1, speed2, speed3, speed4, pidfactor, sins[360], cosin[360];
-extr int x, y;
+extr float x, y, vx, vy, speed1, speed2, speed3, speed4, pidfactor, sins[360], cosin[360];
+
+//LINES
+extr byte lineSensByteBak;
+extr byte lineReading;
+//flags for semi-axis block
+extr bool vxp, vxn, vyp, vyn;
+
+extr bool bounds;
+extr bool slow;
+extr elapsedMillis exitTimer;
+
+extr int LN1I;
+extr int LN2I;
+extr int LN3I;
+extr int LN4I;
+extr int LN1O;
+extr int LN2O;
+extr int LN3O;
+extr int LN4O;
 
 // US
 extr int reading;
@@ -112,9 +114,6 @@ extr int status_y;      // posizione nel campo vale SUD, NORD o CENTRO o 255
 extr int guessed_x, guessed_y;
 extr int zoneIndex;
 extr bool calcPhyZoneCam;
-
-extr byte lineSensByteBak;
-
 extr int DxF;      // con  misura y OK e robot a EST o A OVEST con us_fx o us_px < DyF sto a NORD o a SUD  era - 10
 extr bool goal_zone;
 
@@ -156,7 +155,8 @@ extr int cameraReady;
 extr float stincr;
 extr float cstorc;
 
-
 // test vars
 extr char test; // test select
 extr bool flagtest;
+
+void initVars();

@@ -7,8 +7,8 @@
 
 // TIMED PID CONTROL TESTING
 void drivePID(signed int direzione, float vMot) {
-  vx = ((vMot * cosin[direzione]) * x);
-  vy = ((-vMot * sins[direzione]) * y);
+  vx = ((vMot * cosin[direzione]));
+  vy = ((-vMot * sins[direzione]));
 
   speed1 = ((vx * sins[45] ) + (vy * cosin[45] ));
   speed2 = ((vx * sins[135]) + (vy * cosin[135]));

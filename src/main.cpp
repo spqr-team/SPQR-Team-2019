@@ -29,77 +29,7 @@ int aiut = 0;
 
 void setup() {
   startSetup();
-
-  // Now assign value to variables, first thing to do
-  // IMU
-  imu_current_euler = 0;
-  // Ball
-  ball_distance = 0;
-  ball_degrees = 0;
-  ball_seen = false;
-  // PID
-  errorePre = 0.0;
-  integral = 0.0;
-  st = 0;
-  // US
-  reading = 0;
-  us_t0 = 0;
-  us_t1 = 0;
-  us_flag = false;
-  // Position
-  old_status_x = CENTER;
-  old_status_y = CENTER;
-  // old_guessedlocation = CENTER_CENTER;
-  goal_zone = false;
-  good_field_x = true;
-  good_field_y = true;
-  status_x = CENTER;
-  status_y = CENTER;
-  // currentlocation = CENTER_CENTER;
-  // guessedlocation = CENTER_CENTER;
-  // Linesensors and interrupt
-
-  // bluetooth misc
-  a = 0;
-  old_timer = 0;
-  role = 0;
-  friendZone = 0;
-  iAmHere = 0;
-  comrade = false;
-
-  // global vars for angles
-  globalDir = 0;
-  globalSpeed = 0;
-  st = 0;
-
-  // attack
-  atk_direction = 0;
-  atk_speed = 0;
-
-  // CAMERA
-  pAtk = 0;
-  pDef = 0;
-  portx = 0;
-  goal_orientation = 0;
-  cameraReady = 0;
-
-  // BT
-  topolino = 0;
-  fpos = 0;
-
-  // stincr
-  stincr = 0;
-  cstorc = 0;
-
-  // lines
-  exitTimer = EXTIME;
-
-  //axis
-  y = 1;
-  x = 1;
-
-  keeper_tookTimer = false;
-  keeper_backToGoalPost = false;
+  initVars();
 
   // ;)
   analogWriteFrequency(2 , 15000);
@@ -110,18 +40,14 @@ void setup() {
   // disable those pins, damaged teensy
   pinMode(A8, INPUT_DISABLE); // pin A8 in corto tra 3.3V e massa
   pinMode(16, INPUT_DISABLE); // pin 16 in corto tra 3.3V e massa
-
   pinMode(R, OUTPUT);
   pinMode(G, OUTPUT);
   pinMode(Y, OUTPUT);
-
   pinMode(SWITCH_DX, INPUT);
   pinMode(SWITCH_SX, INPUT);
 
   // Enable Serial for test
   Serial.begin(9600);
-  //Enable Serial3 for debug
-
   // Enable Serial4 for the slave
   NANO_BALL.begin(57600);
   // Enable Serial2 for the camera
@@ -133,24 +59,9 @@ void setup() {
   initUS();
   initSinCos();
 
-
-
   timertest = 0;
-
-  // if(digitalRead(SWITCH_DX) == HIGH && digitalRead(SWITCH_SX) == HIGH){
-  //   NANO_BALL.end();
-    // //pinMode(31, INPUT_DISABLE);
-    // //pinMode(32, INPUT_DISABLE);
-    // tone(BUZZER, C6);
-    // delay(500);
-    // noTone(BUZZER);
-    // super_mario();
-  // }
-  
   delay(400);
-
   initBluetooth();
-
   stopSetup();
 }
 
@@ -173,12 +84,8 @@ void loop() {
   }
 
   calculateLogicZone();
+  comrade = true;
   
-  // Ao();
-  // com(500);
-
-  // comrade = true;
-
   if(comrade) {
     if(ball_seen){
       if(role) goalie();
@@ -201,7 +108,9 @@ void loop() {
   checkLineSensors();                           //Last thing in loop, for priority
   // safetysafe();
 
-  drivePID(globalDir, globalSpeed);
+  if(globalSpeed != 0) globalSpeed = 200;
+  st = 0;
+   drivePID(globalDir, globalSpeed);
   // for(int i = 0; i <= 255; i+= 10) {
   //   turnMotor(2, 1, 0, 50);
   //   if(i >= 255) i = 0;

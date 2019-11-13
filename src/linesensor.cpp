@@ -58,43 +58,44 @@ void checkLineSensors() {
 }
 
 void outOfBounds(){
+  vxp = 0;
+  vxn = 0;
+  vyp = 0;
+  vyn = 0;
+  if(linesensbyteO > 0) handleExtern();
+  if(linesensbyteI > 0) handleIntern();
+}
 
+void handleExtern (){
+  if((linesensbyteO & 0b00000001) == 1) vyp = 1;
+  if((linesensbyteO & 0b00000010) == 2) vxp = 1;
+  if((linesensbyteO & 0b00000100) == 4) vyn = 1;
+  if((linesensbyteO & 0b00001000) == 8) vxn = 1;
+}
+
+void handleIntern(){
   if(fboundsX == true) {
-    if(linesensbyte & 0x02) linesensbyteOLDX = 2;
-    else if(linesensbyte & 0x08) linesensbyteOLDX = 8;
+    if(linesensbyteI & 0x02) linesensbyteOLDX = 2;
+    else if(linesensbyteI & 0x08) linesensbyteOLDX = 8;
     //BIBOP ERROROZZO
     //if(linesensbyteOLDX != 0) fboundsX == false;
     if(linesensbyteOLDX != 0) fboundsX = false;
   }
   if(fboundsY == true) {
-    if(linesensbyte & 0x01) linesensbyteOLDY = 1;
-    else if(linesensbyte & 0x04) linesensbyteOLDY = 4;
+    if(linesensbyteI & 0x01) linesensbyteOLDY = 1;
+    else if(linesensbyteI & 0x04) linesensbyteOLDY = 4;
     //BIBOP ERROROZZO
     //if(linesensbyteOLDY != 0) fboundsY == false;
     if(linesensbyteOLDY != 0) fboundsY = false;
   }
-
-    //
-    // Serial.print(linesensbyte);
-    // Serial.print(" ");
-    // Serial.print(linesensbyteOLDX);
-    // Serial.print(" ");
-    // Serial.print(linesensbyteOLDY);
-    // Serial.print(" ");
-    // Serial.print(exitTimer);
-    // Serial.println(" ");
-
-
-
-
   if (exitTimer <= EXTIME){
     //fase di rientro
-    if(linesensbyte == 15) {
-      linesensbyte = linesensbyteOLDY | linesensbyteOLDX;        //ZOZZATA MAXIMA
+    if(linesensbyteI == 15) {
+      linesensbyteI = linesensbyteOLDY | linesensbyteOLDX;        //ZOZZATA MAXIMA
       //digitalWrite(Y, HIGH);
     }
 
-    switch(linesensbyte){
+    switch(linesensbyteI){
       case 1:
         outDir = 180;
         outVel = 250;
@@ -198,12 +199,6 @@ void outOfBounds(){
         outVel = 250;
         break;
       case 15:
-      // Serial.print(linesensbyteOLDX);
-      // Serial.print(" ");
-      // Serial.print(linesensbyteOLDY);
-      // Serial.println(" ");
-
-
 
         break;
       case 0:
@@ -222,7 +217,7 @@ void outOfBounds(){
   }else{
     //fine rientro
     ballMask(0);
-    linesensbyte = 0;
+    linesensbyteI = 0;
     linesensbyteOLDY = 0;
     linesensbyteOLDX = 0;
     noTone(30);
@@ -232,7 +227,7 @@ void outOfBounds(){
     lineSensByteBak = 30;
   }
 
-   lineSensByteBak = linesensbyte;
+   lineSensByteBak = linesensbyteI;
    if(exitTimer == 99) slow = true;
    else slow = false;
 }
