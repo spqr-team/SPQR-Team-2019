@@ -52,24 +52,24 @@ void checkLineSensors() {
     exitTimer = 0;
   }
 
-  linesensbyte |= (linesensbyteI | linesensbyteO);
+  // linesensbyte |= (linesensbyteI | linesensbyteO);
 
   outOfBounds();
 }
 
 void outOfBounds(){
-  vxp = 0;
-  vxn = 0;
-  vyp = 0;
-  vyn = 0;
+  // vxp = 0;
+  // vxn = 0;
+  // vyp = 0;
+  // vyn = 0;
   if(linesensbyteO > 0) handleExtern();
   if(linesensbyteI > 0) handleIntern();
 }
 
 void handleExtern (){
-  if((linesensbyteO & 0b00000001) == 1) vyp = 1;
-  if((linesensbyteO & 0b00000010) == 2) vxp = 1;
+  if((linesensbyteO & 0b00000001) == 1) vyp = 1;  // esclusione
   if((linesensbyteO & 0b00000100) == 4) vyn = 1;
+  if((linesensbyteO & 0b00000010) == 2) vxp = 1;
   if((linesensbyteO & 0b00001000) == 8) vxn = 1;
 }
 
@@ -77,15 +77,11 @@ void handleIntern(){
   if(fboundsX == true) {
     if(linesensbyteI & 0x02) linesensbyteOLDX = 2;
     else if(linesensbyteI & 0x08) linesensbyteOLDX = 8;
-    //BIBOP ERROROZZO
-    //if(linesensbyteOLDX != 0) fboundsX == false;
     if(linesensbyteOLDX != 0) fboundsX = false;
   }
   if(fboundsY == true) {
     if(linesensbyteI & 0x01) linesensbyteOLDY = 1;
     else if(linesensbyteI & 0x04) linesensbyteOLDY = 4;
-    //BIBOP ERROROZZO
-    //if(linesensbyteOLDY != 0) fboundsY == false;
     if(linesensbyteOLDY != 0) fboundsY = false;
   }
   if (exitTimer <= EXTIME){

@@ -7,22 +7,25 @@
 
 // TIMED PID CONTROL TESTING
 void drivePID(signed int direzione, float vMot) {
-  vx = ((vMot * cosin[direzione]));
-  vy = ((-vMot * sins[direzione]));
+
+  /*
+    vx+ robot avanti
+    vx- robot indietro
+    vy+ robot sinistra
+    vy- robot destra
+  */
+
+  vx = ((vMot * cosin[direzione]) * x);
+  vy = ((-vMot * sins[direzione]) * y);
+
+  if(vy > 0) vy = 0;
 
   speed1 = ((vx * sins[45] ) + (vy * cosin[45] ));
   speed2 = ((vx * sins[135]) + (vy * cosin[135]));
   speed3 = -(speed1);
   speed4 = -(speed2);
 
-  /*speed1 = ((-(sins[((direzione - 45) + 360) % 360])) * vMot);          // mot 1
-   speed2 = ((-(sins[((direzione - 135) + 360)% 360])) * vMot);          // mot 2
-   speed3 = -(speed1);                                                   // mot 3
-   speed4 = -(speed2);*/                                                   // mot 4
-
   pidfactor = updatePid();
-
-
   speed1 += pidfactor;
   speed2 += pidfactor;
   speed3 += pidfactor;
