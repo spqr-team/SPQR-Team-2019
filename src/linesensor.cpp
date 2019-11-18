@@ -24,9 +24,15 @@ byte linesensbyte;
 byte linesensbytefst;
 byte linesensbyteOLDY;
 byte linesensbyteOLDX;
+byte linesensbyteOfst;
+byte linesensbyteOOLDY;
+byte linesensbyteOOLDX;
 
 bool fboundsX;
 bool fboundsY;
+
+bool fboundsOX;
+bool fboundsOY;
 
 int outDir;
 int outVel;
@@ -58,19 +64,61 @@ void checkLineSensors() {
 }
 
 void outOfBounds(){
-    vxp = 0;
-    vxn = 0;
-    vyp = 0;
-    vyn = 0;
+  vxp = 0;
+  vxn = 0;
+  vyp = 0;
+  vyn = 0;
   if(linesensbyteO > 0) handleExtern();
   if(linesensbyteI > 0) handleIntern();
 }
 
 void handleExtern (){
+  if(fboundsOX == true) {
+    if(linesensbyteO & 0x02) linesensbyteOOLDX = 2;
+    else if(linesensbyteO & 0x08) linesensbyteOOLDX = 8;
+    if(linesensbyteOOLDX != 0) fboundsX = false;
+  }
+  if(fboundsOY == true) {
+    if(linesensbyteO & 0x01) linesensbyteOOLDY = 1;
+    else if(linesensbyteO & 0x04) linesensbyteOOLDY = 4;
+    if(linesensbyteOOLDY != 0) fboundsY = false;
+  }
+  if (exitTimer <= EXTIME){
+    //fase di rientro
+    if(linesensbyteO == 15) {
+      linesensbyteO = linesensbyteOOLDY | linesensbyteOOLDX; 
+    }
     if((linesensbyteO & 0b00000001) == 1) vyp = 1;  // esclusione
     if((linesensbyteO & 0b00000100) == 4) vyn = 1;
     if((linesensbyteO & 0b00000010) == 2) vxp = 1;
     if((linesensbyteO & 0b00001000) == 8) vxn = 1;
+    if(linesensbyteO == 5){
+        //digitalWrite(R, HIGH);
+        if(linesensbyteOOLDX == 2) {
+          //270
+          vyn = 1;
+          vyp = 1;
+          vxp = 1;
+        }
+        if(linesensbyteOOLDX == 8) {
+          vyn = 1;
+          vyp = 1;
+          vxn = 1;
+        } 
+    }
+    if(linesensbyte == 10){
+        if(linesensbyteOOLDY == 4) {
+          vxn = 1;
+          vxp = 1;
+          vyn = 1;
+        }
+        if(linesensbyteOOLDY == 1) {
+          vxn = 1;
+          vxp = 1;
+          vyp = 1;
+        }
+    }
+  }
 }
 
 void handleIntern(){
