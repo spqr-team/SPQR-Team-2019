@@ -13,12 +13,16 @@ void drivePID(signed int direzione, float vMot) {
     vx- robot indietro
     vy+ robot sinistra
     vy- robot destra
+
+    Il flip x-y è dovuto al passaggio dalla circonferenza goniometrica a qulella del robot, che ha lo 0 a 90° della circonferenza
+    Il cambio di verso dell'asse y è dovuto al segno meno nella formula sotto
   */
 
   vx = ((vMot * cosin[direzione]) * x);
   vy = ((-vMot * sins[direzione]) * y);
 
-  if(vy > 0) vy = 0;
+  if((vy > 0 && vxn == 1) || (vy < 0 && vxp == 1)) vy = 0;
+  if((vx > 0 && vyp == 1) || (vx < 0 && vyn == 1)) vx = 0;
 
   speed1 = ((vx * sins[45] ) + (vy * cosin[45] ));
   speed2 = ((vx * sins[135]) + (vy * cosin[135]));
@@ -72,8 +76,8 @@ void preparePID(int direction, int speed, int offset) {
   globalDir = direction;
   globalSpeed = speed;
   st = offset;
-   while(st < -180) st += 360;
-   while(st > 180) st -= 360;
+  while(st < -180) st += 360;
+  while(st > 180) st -= 360;
   // if(bounds) st = 0;
 }
 

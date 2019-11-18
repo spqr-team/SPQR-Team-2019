@@ -58,19 +58,19 @@ void checkLineSensors() {
 }
 
 void outOfBounds(){
-  // vxp = 0;
-  // vxn = 0;
-  // vyp = 0;
-  // vyn = 0;
+    vxp = 0;
+    vxn = 0;
+    vyp = 0;
+    vyn = 0;
   if(linesensbyteO > 0) handleExtern();
   if(linesensbyteI > 0) handleIntern();
 }
 
 void handleExtern (){
-  if((linesensbyteO & 0b00000001) == 1) vyp = 1;  // esclusione
-  if((linesensbyteO & 0b00000100) == 4) vyn = 1;
-  if((linesensbyteO & 0b00000010) == 2) vxp = 1;
-  if((linesensbyteO & 0b00001000) == 8) vxn = 1;
+    if((linesensbyteO & 0b00000001) == 1) vyp = 1;  // esclusione
+    if((linesensbyteO & 0b00000100) == 4) vyn = 1;
+    if((linesensbyteO & 0b00000010) == 2) vxp = 1;
+    if((linesensbyteO & 0b00001000) == 8) vxn = 1;
 }
 
 void handleIntern(){
