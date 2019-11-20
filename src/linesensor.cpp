@@ -51,12 +51,12 @@ void checkLineSensors() {
   }
 
   if ((linesensbyteI > 0) || (linesensbyteO > 0)) {
+      fboundsOX = true;
+      fboundsOY = true;
     if(exitTimer > EXTIME) {
       fboundsX = true;
       fboundsY = true;
 
-      fboundsOX = true;
-      fboundsOY = true;
     }
     exitTimer = 0;
   }
@@ -80,7 +80,6 @@ void outOfBounds(){
 }
 
 void handleExtern (){
-
   if(fboundsOX == true) {
     if(linesensbyteO & 0x02) linesensbyteOOLDX = 2;
     else if(linesensbyteO & 0x08) linesensbyteOOLDX = 8;
@@ -310,7 +309,7 @@ void handleIntern(){
 //     if(ball_degrees > 45 && ball_degrees < 315) globalSpeed = globalSpeed / 1.4;
 //   }
 // }
-
+  
 
 void testLineSensors() {
   checkLineSensors();
