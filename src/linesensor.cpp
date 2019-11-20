@@ -71,10 +71,10 @@ void outOfBounds(){
   else{
       linesensbyteOOLDX = 0;
       linesensbyteOOLDY = 0;
-      /* vxp = 0;
+      vxp = 0;
       vxn = 0;
       vyp = 0;
-      vyn = 0;  */ 
+      vyn = 0; 
   }
   if(linesensbyteI > 0) handleIntern();
 }

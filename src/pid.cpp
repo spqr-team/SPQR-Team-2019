@@ -21,18 +21,9 @@ void drivePID(signed int direzione, float vMot) {
   vx = ((vMot * cosin[direzione]) * x);
   vy = ((-vMot * sins[direzione]) * y);
 
-  if(vy > 0 && vxn == 1) vy = 0;
-  else if(vy < 0 && vxn == 1) vxn = 0;
-  if(vy < 0 && vxp == 1) vy = 0;
-  else if(vy > 0 && vxp == 1) vxp = 0;
-  
-  if(vx > 0 && vyp == 1) vx = 0;
-  else if(vx < 0 && vyp == 1) vyp = 0;
-  if(vx < 0 && vyn == 1) vx = 0;
-  else if(vx > 0 && vyn == 1) vyn = 0;
 
-  /* if((vy > 0 && vxn == 1) || (vy < 0 && vxp == 1)) vy = 0;
-  if((vx > 0 && vyp == 1) || (vx < 0 && vyn == 1)) vx = 0; */
+   if((vy > 0 && vxn == 1) || (vy < 0 && vxp == 1)) vy = 0;
+  if((vx > 0 && vyp == 1) || (vx < 0 && vyn == 1)) vx = 0; 
 
   speed1 = ((vx * sins[45] ) + (vy * cosin[45] ));
   speed2 = ((vx * sins[135]) + (vy * cosin[135]));
