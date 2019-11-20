@@ -54,6 +54,9 @@ void checkLineSensors() {
     if(exitTimer > EXTIME) {
       fboundsX = true;
       fboundsY = true;
+
+      fboundsOX = true;
+      fboundsOY = true;
     }
     exitTimer = 0;
   }
@@ -64,61 +67,52 @@ void checkLineSensors() {
 }
 
 void outOfBounds(){
-  vxp = 0;
-  vxn = 0;
-  vyp = 0;
-  vyn = 0;
   if(linesensbyteO > 0) handleExtern();
+  else{
+      linesensbyteOOLDX = 0;
+      linesensbyteOOLDY = 0;
+      vxp = 0;
+      vxn = 0;
+      vyp = 0;
+      vyn = 0;  
+  }
   if(linesensbyteI > 0) handleIntern();
 }
 
 void handleExtern (){
+
   if(fboundsOX == true) {
     if(linesensbyteO & 0x02) linesensbyteOOLDX = 2;
     else if(linesensbyteO & 0x08) linesensbyteOOLDX = 8;
-    if(linesensbyteOOLDX != 0) fboundsX = false;
+    if(linesensbyteOOLDX != 0) fboundsOX = false;
   }
   if(fboundsOY == true) {
     if(linesensbyteO & 0x01) linesensbyteOOLDY = 1;
     else if(linesensbyteO & 0x04) linesensbyteOOLDY = 4;
-    if(linesensbyteOOLDY != 0) fboundsY = false;
+    if(linesensbyteOOLDY != 0) fboundsOY = false;
   }
   if (exitTimer <= EXTIME){
-    //fase di rientro
-    if(linesensbyteO == 15) {
-      linesensbyteO = linesensbyteOOLDY | linesensbyteOOLDX; 
-    }
-    if((linesensbyteO & 0b00000001) == 1) vyp = 1;  // esclusione
-    if((linesensbyteO & 0b00000100) == 4) vyn = 1;
-    if((linesensbyteO & 0b00000010) == 2) vxp = 1;
-    if((linesensbyteO & 0b00001000) == 8) vxn = 1;
-    if(linesensbyteO == 5){
-        //digitalWrite(R, HIGH);
-        if(linesensbyteOOLDX == 2) {
-          //270
-          vyn = 1;
-          vyp = 1;
-          vxp = 1;
-        }
-        if(linesensbyteOOLDX == 8) {
-          vyn = 1;
-          vyp = 1;
-          vxn = 1;
-        } 
-    }
-    if(linesensbyte == 10){
-        if(linesensbyteOOLDY == 4) {
-          vxn = 1;
-          vxp = 1;
-          vyn = 1;
-        }
-        if(linesensbyteOOLDY == 1) {
-          vxn = 1;
-          vxp = 1;
-          vyp = 1;
-        }
-    }
+    if((linesensbyteOOLDY & 0b00000001) == 1) vyp = 1;  // esclusione
+    if((linesensbyteOOLDY & 0b00000100) == 4) vyn = 1;
+    if((linesensbyteOOLDX & 0b00000010) == 2) vxp = 1;
+    if((linesensbyteOOLDX & 0b00001000) == 8) vxn = 1;
   }
+  DEBUG_PRINT.print(linesensbyteOOLDX);
+  DEBUG_PRINT.print(" | ");
+  DEBUG_PRINT.print(linesensbyteOOLDY);
+  DEBUG_PRINT.print(" |     ");
+  DEBUG_PRINT.print(fboundsOX);
+  DEBUG_PRINT.print(" | ");
+  DEBUG_PRINT.print(fboundsOY);
+  DEBUG_PRINT.print(" |    ");
+  DEBUG_PRINT.print(vxp);
+  DEBUG_PRINT.print(" | ");
+  DEBUG_PRINT.print(vxn);
+  DEBUG_PRINT.print(" | ");
+  DEBUG_PRINT.print(vyp);
+  DEBUG_PRINT.print(" | ");
+  DEBUG_PRINT.print(vyn);
+  DEBUG_PRINT.println(" | ");
 }
 
 void handleIntern(){
@@ -250,21 +244,26 @@ void handleIntern(){
         //;)
         break;
     }
-    ballMask(1);
+    // ballMask(1);
     if(exitTimer < 45) outVel = 330;
     else outVel = 230;
     preparePID(outDir, outVel, 0);
     
-    tone(30, LA3);
+    // tone(30, LA3);
     keeper_backToGoalPost = true;
     keeper_tookTimer = true;
   }else{
     //fine rientro
-    ballMask(0);
+    // ballMask(0);
+    vxp = 0;
+    vxn = 0;
+    vyp = 0;
+    vyn = 0;
+
     linesensbyteI = 0;
     linesensbyteOLDY = 0;
     linesensbyteOLDX = 0;
-    noTone(30);
+    // noTone(30);
     //digitalWrite(Y, LOW);
     //digitalWrite(G, LOW);
 
@@ -276,41 +275,41 @@ void handleIntern(){
    else slow = false;
 }
 
-int ball = -1;
-elapsedMillis mask;
-elapsedMillis slowly;
+// int ball = -1;
+// elapsedMillis mask;
+// elapsedMillis slowly;
 
-void ballMask(int on) {
-  float diffB;
+// void ballMask(int on) {
+//   float diffB;
 
-  if(on) {
-    ball = ball_degrees;
-    mask = 0;
-  }
-  else {
-    if(ball != -1) {
-      if(inAngle(ball_degrees, ai, ar) == 0) {
-        ball = -1;
-        return;
-      }
-      else {
-        if(mask < 500) preparePID(0, 0, 0);         //prima era 150
-        else {
-          ball = -1;
-          return;
-        }
-      }
-    } else return;
-  }
+//   if(on) {
+//     ball = ball_degrees;
+//     mask = 0;
+//   }
+//   else {
+//     if(ball != -1) {
+//       if(inAngle(ball_degrees, ai, ar) == 0) {
+//         ball = -1;
+//         return;
+//       }
+//       else {
+//         if(mask < 500) preparePID(0, 0, 0);         //prima era 150
+//         else {
+//           ball = -1;
+//           return;
+//         }
+//       }
+//     } else return;
+//   }
 
-}
+// }
 
-void safetysafe() {
-  if(slow)  slowly = 0;
-  if(!slow) if(slowly < 600){
-    if(ball_degrees > 45 && ball_degrees < 315) globalSpeed = globalSpeed / 1.4;
-  }
-}
+// void safetysafe() {
+//   if(slow)  slowly = 0;
+//   if(!slow) if(slowly < 600){
+//     if(ball_degrees > 45 && ball_degrees < 315) globalSpeed = globalSpeed / 1.4;
+//   }
+// }
 
 
 void testLineSensors() {
