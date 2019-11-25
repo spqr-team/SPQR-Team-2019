@@ -74,5 +74,7 @@ void initVars(){
   //axis
   y = 1;
   x = 1;
+
+  canUnblock = true;
 }
 

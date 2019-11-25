@@ -62,56 +62,30 @@ void checkLineSensors() {
   }
 
   // linesensbyte |= (linesensbyteI | linesensbyteO);
+  linesensbyteI |= (linesensbyteI | linesensbyteO);
 
   outOfBounds();
 }
 
 void outOfBounds(){
-  if(linesensbyteO > 0) handleExtern();
-  else{
-      linesensbyteOOLDX = 0;
-      linesensbyteOOLDY = 0;
-      vxp = 0;
-      vxn = 0;
-      vyp = 0;
-      vyn = 0; 
+  // if(linesensbyteO > 0) handleExtern();
+  // else{
+  //     linesensbyteOOLDX = 0;
+  //     linesensbyteOOLDY = 0;
+  //     vxp = 0;
+  //     vxn = 0;
+  //     vyp = 0;
+  //     vyn = 0; 
+  // }
+    handleExtern();
+    handleIntern();
   }
-  if(linesensbyteI > 0) handleIntern();
-}
 
 void handleExtern (){
-  if(fboundsOX == true) {
-    if(linesensbyteO & 0x02) linesensbyteOOLDX = 2;
-    else if(linesensbyteO & 0x08) linesensbyteOOLDX = 8;
-    if(linesensbyteOOLDX != 0) fboundsOX = false;
-  }
-  if(fboundsOY == true) {
-    if(linesensbyteO & 0x01) linesensbyteOOLDY = 1;
-    else if(linesensbyteO & 0x04) linesensbyteOOLDY = 4;
-    if(linesensbyteOOLDY != 0) fboundsOY = false;
-  }
-  if (exitTimer <= EXTIME){
-    if((linesensbyteOOLDY & 0b00000001) == 1) vyp = 1;  // esclusione
-    if((linesensbyteOOLDY & 0b00000100) == 4) vyn = 1;
-    if((linesensbyteOOLDX & 0b00000010) == 2) vxp = 1;
-    if((linesensbyteOOLDX & 0b00001000) == 8) vxn = 1;
-  }
-  DEBUG_PRINT.print(linesensbyteOOLDX);
-  DEBUG_PRINT.print(" | ");
-  DEBUG_PRINT.print(linesensbyteOOLDY);
-  DEBUG_PRINT.print(" |     ");
-  DEBUG_PRINT.print(fboundsOX);
-  DEBUG_PRINT.print(" | ");
-  DEBUG_PRINT.print(fboundsOY);
-  DEBUG_PRINT.print(" |    ");
-  DEBUG_PRINT.print(vxp);
-  DEBUG_PRINT.print(" | ");
-  DEBUG_PRINT.print(vxn);
-  DEBUG_PRINT.print(" | ");
-  DEBUG_PRINT.print(vyp);
-  DEBUG_PRINT.print(" | ");
-  DEBUG_PRINT.print(vyn);
-  DEBUG_PRINT.println(" | ");
+    if((linesensbyteI & 0b00000001) == 1) vyp = 1;  // esclusione
+    if((linesensbyteI & 0b00000100) == 4) vyn = 1;
+    if((linesensbyteI & 0b00000010) == 2) vxp = 1;
+    if((linesensbyteI & 0b00001000) == 8) vxn = 1;
 }
 
 void handleIntern(){
@@ -126,6 +100,8 @@ void handleIntern(){
     if(linesensbyteOLDY != 0) fboundsY = false;
   }
   if (exitTimer <= EXTIME){
+
+    canUnblock = false;
     //fase di rientro
     if(linesensbyteI == 15) {
       linesensbyteI = linesensbyteOLDY | linesensbyteOLDX;        //ZOZZATA MAXIMA
@@ -135,73 +111,73 @@ void handleIntern(){
     switch(linesensbyteI){
       case 1:
         outDir = 180;
-        outVel = 250;
+        outVel = 300;
         ai = 0;
         ar = 30;
         break;
       case 2:
         outDir = 270;
-        outVel = 250;
+        outVel = 300;
         ai = 90;
         ar = 60;
         break;
       case 4:
         outDir = 0;
-        outVel = 250;
+        outVel = 300;
         ai = 180;
         ar = 30;
         break;
       case 8:
         outDir = 90;
-        outVel = 250;
+        outVel = 300;
         ai = 270;
         ar = 60;
         break;
       case 3:
         outDir = 225;
-        outVel = 250;
+        outVel = 300;
         ai = 45;
         ar = 20;
         break;
       case 6:
         outDir = 315;
-        outVel = 250;
+        outVel = 300;
         ai = 135;
         ar = 20;
         break;
       case 12:
         outDir = 45;
-        outVel = 250;
+        outVel = 300;
         ai = 225;
         ar = 20;
         break;
       case 9:
         outDir = 135;
-        outVel = 250;
+        outVel = 300;
         ai = 315;
         ar = 20;
         break;
       case 7:
         outDir = 270;
-        outVel = 250;
+        outVel = 300;
         ai = 90;
         ar = 60;
         break;
       case 13:
         outDir = 90;
-        outVel = 250;
+        outVel = 300;
         ai = 270;
         ar = 60;
         break;
       case 11:
         outDir = 180;
-        outVel = 250;
+        outVel = 300;
         ai = 0;
         ar = 60;
         break;
       case 14:
         outDir = 0;
-        outVel = 250;
+        outVel = 300;
         ai = 180;
         ar = 60;
         break;
@@ -219,7 +195,7 @@ void handleIntern(){
           ai = 270;
           ar = 30;
         }
-        outVel = 250;
+        outVel = 300;
         break;
       case 10:
         //digitalWrite(G, HIGH);
@@ -233,7 +209,7 @@ void handleIntern(){
           ai = 0;
           ar = 30;
         }
-        outVel = 250;
+        outVel = 300;
         break;
       case 15:
 
@@ -251,6 +227,7 @@ void handleIntern(){
     // tone(30, LA3);
     keeper_backToGoalPost = true;
     keeper_tookTimer = true;
+    unlockTime = 0;
   }else{
     //fine rientro
     // ballMask(0);
@@ -267,11 +244,14 @@ void handleIntern(){
     //digitalWrite(G, LOW);
 
     lineSensByteBak = 30;
+    unlockTime = 0;
   }
 
    lineSensByteBak = linesensbyteI;
    if(exitTimer == 99) slow = true;
    else slow = false;
+
+   if(exitTimer > EXTIME || unlockTime > UNLOCK_THRESH) canUnblock = true;
 }
 
 // int ball = -1;
