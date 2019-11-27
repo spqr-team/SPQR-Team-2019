@@ -21,7 +21,7 @@ void drivePID(signed int direzione, float vMot) {
   vx = ((vMot * cosin[direzione]) * x);
   vy = ((-vMot * sins[direzione]) * y);
 
-  if(((vy < 0 && vxn == 1) || (vy > 0 && vxp == 1) || (vx < 0 && vyp == 1) || (vx > 0 && vyn == 1)) && canUnblock) {
+  if((((vy < 0 && vxn == 1) || (vy > 0 && vxp == 1) || (vx < 0 && vyp == 1) || (vx > 0 && vyn == 1)) && canUnblock) || (millis() > unlockTime + UNLOCK_THRESH)) {
     vxn = 0;
     vxp = 0;
     vyp = 0;

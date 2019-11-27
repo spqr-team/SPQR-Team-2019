@@ -68,15 +68,6 @@ void checkLineSensors() {
 }
 
 void outOfBounds(){
-  // if(linesensbyteO > 0) handleExtern();
-  // else{
-  //     linesensbyteOOLDX = 0;
-  //     linesensbyteOOLDY = 0;
-  //     vxp = 0;
-  //     vxn = 0;
-  //     vyp = 0;
-  //     vyn = 0; 
-  // }
     handleExtern();
     handleIntern();
   }
@@ -100,8 +91,9 @@ void handleIntern(){
     if(linesensbyteOLDY != 0) fboundsY = false;
   }
   if (exitTimer <= EXTIME){
-
     canUnblock = false;
+    unlockTime = millis();
+
     //fase di rientro
     if(linesensbyteI == 15) {
       linesensbyteI = linesensbyteOLDY | linesensbyteOLDX;        //ZOZZATA MAXIMA
@@ -111,185 +103,90 @@ void handleIntern(){
     switch(linesensbyteI){
       case 1:
         outDir = 180;
-        outVel = 300;
-        ai = 0;
-        ar = 30;
+        outVel = 320;
         break;
       case 2:
         outDir = 270;
-        outVel = 300;
-        ai = 90;
-        ar = 60;
+        outVel = 320;
         break;
       case 4:
         outDir = 0;
-        outVel = 300;
-        ai = 180;
-        ar = 30;
+        outVel = 320;
         break;
       case 8:
         outDir = 90;
-        outVel = 300;
-        ai = 270;
-        ar = 60;
+        outVel = 320;
         break;
       case 3:
         outDir = 225;
-        outVel = 300;
-        ai = 45;
-        ar = 20;
+        outVel = 320;
         break;
       case 6:
         outDir = 315;
-        outVel = 300;
-        ai = 135;
-        ar = 20;
+        outVel = 320;
         break;
       case 12:
         outDir = 45;
-        outVel = 300;
-        ai = 225;
-        ar = 20;
+        outVel = 320;
         break;
       case 9:
         outDir = 135;
-        outVel = 300;
-        ai = 315;
-        ar = 20;
+        outVel = 320;
         break;
       case 7:
         outDir = 270;
-        outVel = 300;
-        ai = 90;
-        ar = 60;
+        outVel = 320;
         break;
       case 13:
         outDir = 90;
-        outVel = 300;
-        ai = 270;
-        ar = 60;
+        outVel = 320;
         break;
       case 11:
         outDir = 180;
-        outVel = 300;
-        ai = 0;
-        ar = 60;
+        outVel = 320;
         break;
       case 14:
         outDir = 0;
-        outVel = 300;
-        ai = 180;
-        ar = 60;
+        outVel = 320;
         break;
-
-
       case 5:
         //digitalWrite(R, HIGH);
-        if(linesensbyteOLDX == 2) {
-          outDir = 270;
-          ai = 90;
-          ar = 30;
-        }
-        if(linesensbyteOLDX == 8) {
-          outDir = 90;
-          ai = 270;
-          ar = 30;
-        }
-        outVel = 300;
+        if(linesensbyteOLDX == 2) outDir = 270;
+        if(linesensbyteOLDX == 8) outDir = 90;
+        outVel = 320;
         break;
       case 10:
-        //digitalWrite(G, HIGH);
-        if(linesensbyteOLDY == 4) {
-          outDir = 0;
-          ai = 180;
-          ar = 30;
-        }
-        if(linesensbyteOLDY == 1) {
-          outDir = 180;
-          ai = 0;
-          ar = 30;
-        }
-        outVel = 300;
+        if(linesensbyteOLDY == 4) outDir = 0;
+        if(linesensbyteOLDY == 1)outDir = 180;
+        outVel = 320;
         break;
       case 15:
-
         break;
       case 0:
       default:
         //;)
         break;
     }
-    // ballMask(1);
-    if(exitTimer < 45) outVel = 330;
+
+    if(exitTimer < 45) outVel = 350;
     else outVel = 230;
     preparePID(outDir, outVel, 0);
     
     // tone(30, LA3);
     keeper_backToGoalPost = true;
     keeper_tookTimer = true;
-    unlockTime = 0;
   }else{
-    //fine rientro
-    // ballMask(0);
-    /* vxp = 0;
-    vxn = 0;
-    vyp = 0;
-    vyn = 0; */
-
     linesensbyteI = 0;
     linesensbyteOLDY = 0;
     linesensbyteOLDX = 0;
-    // noTone(30);
-    //digitalWrite(Y, LOW);
-    //digitalWrite(G, LOW);
-
     lineSensByteBak = 30;
-    unlockTime = 0;
+    canUnblock = true;
   }
 
    lineSensByteBak = linesensbyteI;
    if(exitTimer == 99) slow = true;
    else slow = false;
-
-   if(exitTimer > EXTIME || unlockTime > UNLOCK_THRESH) canUnblock = true;
 }
-
-// int ball = -1;
-// elapsedMillis mask;
-// elapsedMillis slowly;
-
-// void ballMask(int on) {
-//   float diffB;
-
-//   if(on) {
-//     ball = ball_degrees;
-//     mask = 0;
-//   }
-//   else {
-//     if(ball != -1) {
-//       if(inAngle(ball_degrees, ai, ar) == 0) {
-//         ball = -1;
-//         return;
-//       }
-//       else {
-//         if(mask < 500) preparePID(0, 0, 0);         //prima era 150
-//         else {
-//           ball = -1;
-//           return;
-//         }
-//       }
-//     } else return;
-//   }
-
-// }
-
-// void safetysafe() {
-//   if(slow)  slowly = 0;
-//   if(!slow) if(slowly < 600){
-//     if(ball_degrees > 45 && ball_degrees < 315) globalSpeed = globalSpeed / 1.4;
-//   }
-// }
-  
 
 void testLineSensors() {
   checkLineSensors();

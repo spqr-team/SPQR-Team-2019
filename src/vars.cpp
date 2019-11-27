@@ -66,6 +66,7 @@ void initVars(){
 
   // lines
   exitTimer = EXTIME;
+  unlockTime = 0;
 
   keeper_tookTimer = false;
   keeper_backToGoalPost = false;

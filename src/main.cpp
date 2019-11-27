@@ -108,7 +108,7 @@ void loop() {
   checkLineSensors();                           //Last thing in loop, for priority
   // safetysafe();
 
-  if(globalSpeed != 0) globalSpeed = 250;
+  if(globalSpeed != 0) globalSpeed = 350;
   st = 0;
    drivePID(globalDir, globalSpeed);
   // for(int i = 0; i <= 255; i+= 10) {

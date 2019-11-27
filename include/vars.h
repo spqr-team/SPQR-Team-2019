@@ -49,7 +49,7 @@
 #define S4O A2
 
 #define LINE_THRESH 100
-#define UNLOCK_THRESH 1500
+#define UNLOCK_THRESH 2000
 #define EXTIME 100
 
 #define BNO055_SAMPLERATE_DELAY_MS (60)
@@ -87,7 +87,7 @@ extr bool vxp, vxn, vyp, vyn;
 extr bool bounds;
 extr bool slow;
 extr elapsedMillis exitTimer;
-extr elapsedMillis unlockTime;
+extr unsigned long unlockTime;
 
 extr bool canUnblock;
 
