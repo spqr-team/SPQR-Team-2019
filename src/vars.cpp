@@ -73,8 +73,10 @@ void initVars(){
 
 
   //axis
-  y = 1;
-  x = 1;
+  vxp = 1;
+  vxn = 1;
+  vyp = 1;
+  vyn = 1;
 
   canUnblock = true;
 }

@@ -18,8 +18,9 @@ void drivePID(signed int direzione, float vMot) {
     Il cambio di verso dell'asse y è dovuto al segno meno nella formula sotto
   */
 
-  vx = ((vMot * cosin[direzione]) * x);
-  vy = ((-vMot * sins[direzione]) * y);
+  vx = ((vMot * cosin[direzione]));
+  vy = ((-vMot * sins[direzione]));
+
 
   if((((vy < 0 && vxn == 1) || (vy > 0 && vxp == 1) || (vx < 0 && vyp == 1) || (vx > 0 && vyn == 1)) && canUnblock) || (millis() > unlockTime + UNLOCK_THRESH)) {
     vxn = 0;
@@ -43,30 +44,20 @@ void drivePID(signed int direzione, float vMot) {
   speed3 += pidfactor;
   speed4 += pidfactor;
 
-  // int pidfactor2 = -pAtk * 2.5;
-  //if((ball_degrees >= 330 || ball_degrees <= 30) && ball_distance > 140) pidfactor2 = 0;
-
-  // speed1 += pidfactor2;
-  // speed2 += pidfactor2;
-  // speed3 += pidfactor2;
-  // speed4 += pidfactor2;
-
   speed1 = constrain(speed1, -255, 255);
   speed2 = constrain(speed2, -255, 255);
   speed3 = constrain(speed3, -255, 255);
   speed4 = constrain(speed4, -255, 255);
 
-  speed1 = (int)speed1 > 0 ? map((int)speed1, 1, 255, 35, 255) : speed1;        //maggiore efficienza dei motori
-  speed2 = (int)speed2 > 0 ? map((int)speed2, 1, 255, 35, 255) : speed2;        //maggiore efficienza dei motori
-  speed3 = (int)speed3 > 0 ? map((int)speed3, 1, 255, 35, 255) : speed3;        //maggiore efficienza dei motori
-  speed4 = (int)speed4 > 0 ? map((int)speed4, 1, 255, 35, 255) : speed4;        //maggiore efficienza dei motori
+  // speed1 = (int)speed1 > 0 ? map((int)speed1, 1, 255, 35, 255) : speed1;        //maggiore efficienza dei motori
+  // speed2 = (int)speed2 > 0 ? map((int)speed2, 1, 255, 35, 255) : speed2;        //maggiore efficienza dei motori
+  // speed3 = (int)speed3 > 0 ? map((int)speed3, 1, 255, 35, 255) : speed3;        //maggiore efficienza dei motori
+  // speed4 = (int)speed4 > 0 ? map((int)speed4, 1, 255, 35, 255) : speed4;        //maggiore efficienza dei motori
 
-  speed1 = (int)speed1 < 0 ? map((int)speed1, -255, -1, -255, -35) : speed1;        //maggiore efficienza dei motori
-  speed2 = (int)speed2 < 0 ? map((int)speed2, -255, -1, -255, -35) : speed2;        //maggiore efficienza dei motori
-  speed3 = (int)speed3 < 0 ? map((int)speed3, -255, -1, -255, -35) : speed3;        //maggiore efficienza dei motori
-  speed4 = (int)speed4 < 0 ? map((int)speed4, -255, -1, -255, -35) : speed4;        //maggiore efficienza dei motori
-
-
+  // speed1 = (int)speed1 < 0 ? map((int)speed1, -255, -1, -255, -35) : speed1;        //maggiore efficienza dei motori
+  // speed2 = (int)speed2 < 0 ? map((int)speed2, -255, -1, -255, -35) : speed2;        //maggiore efficienza dei motori
+  // speed3 = (int)speed3 < 0 ? map((int)speed3, -255, -1, -255, -35) : speed3;        //maggiore efficienza dei motori
+  // speed4 = (int)speed4 < 0 ? map((int)speed4, -255, -1, -255, -35) : speed4;        //maggiore efficienza dei motori
 
   // Send every speed to his motor
   mot(1, int(speed1));
@@ -78,10 +69,15 @@ void drivePID(signed int direzione, float vMot) {
   prevPidSpeed = vMot;
 }
 
+float f = 0.6;
+
 void preparePID(int direction, int speed) { preparePID(direction, speed, 0); }
 
 void preparePID(int direction, int speed, int offset) {
-  globalDir = direction;
+  prevPidDir = globalDir;
+
+  globalDir = direction*f + prevPidDir* (1-f);
+
   globalSpeed = speed;
   st = offset;
   while(st < -180) st += 360;

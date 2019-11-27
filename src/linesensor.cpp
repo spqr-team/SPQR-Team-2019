@@ -103,62 +103,48 @@ void handleIntern(){
     switch(linesensbyteI){
       case 1:
         outDir = 180;
-        outVel = 320;
         break;
       case 2:
         outDir = 270;
-        outVel = 320;
         break;
       case 4:
         outDir = 0;
-        outVel = 320;
         break;
       case 8:
         outDir = 90;
-        outVel = 320;
         break;
       case 3:
         outDir = 225;
-        outVel = 320;
         break;
       case 6:
         outDir = 315;
-        outVel = 320;
         break;
       case 12:
         outDir = 45;
-        outVel = 320;
         break;
       case 9:
         outDir = 135;
-        outVel = 320;
         break;
       case 7:
         outDir = 270;
-        outVel = 320;
         break;
       case 13:
         outDir = 90;
-        outVel = 320;
         break;
       case 11:
         outDir = 180;
-        outVel = 320;
         break;
       case 14:
         outDir = 0;
-        outVel = 320;
         break;
       case 5:
         //digitalWrite(R, HIGH);
         if(linesensbyteOLDX == 2) outDir = 270;
         if(linesensbyteOLDX == 8) outDir = 90;
-        outVel = 320;
         break;
       case 10:
         if(linesensbyteOLDY == 4) outDir = 0;
         if(linesensbyteOLDY == 1)outDir = 180;
-        outVel = 320;
         break;
       case 15:
         break;
@@ -169,7 +155,7 @@ void handleIntern(){
     }
 
     if(exitTimer < 45) outVel = 350;
-    else outVel = 230;
+    else outVel = 320;
     preparePID(outDir, outVel, 0);
     
     // tone(30, LA3);

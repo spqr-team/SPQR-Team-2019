@@ -106,19 +106,5 @@ void loop() {
   AAANGOLO(); 
 
   checkLineSensors();                           //Last thing in loop, for priority
-  // safetysafe();
-
-  if(globalSpeed != 0) globalSpeed = 350;
-  st = 0;
-   drivePID(globalDir, globalSpeed);
-  // for(int i = 0; i <= 255; i+= 10) {
-  //   turnMotor(2, 1, 0, 50);
-  //   if(i >= 255) i = 0;
-  //   Serial.print(i);
-  //   Serial.print(", ");
-  //   while(!Serial.available());
-  //   Serial.println(Serial.parseFloat(),4);
-  //   while(Serial.available()) Serial.read();
-  // } 
-  
+  drivePID(globalDir, globalSpeed);
 }
