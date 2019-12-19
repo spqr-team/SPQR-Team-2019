@@ -47,18 +47,9 @@ void keeper() {
             
             // preparePID(dir, KEEPER_BASE_VEL);
         }
+        else preparePID(0,0,0);
         centerGoalPostCamera(true);    
         
-            // if(ball_degrees >= 0 && ball_degrees <= 90) preparePID(90, 320*angleX*1.2);
-        // else if(ball_degrees >= 270 && ball_degrees <= 360) preparePID(270, 320*angleX*1.2);
-        // else {
-        //     int ball_degrees2 = ball_degrees > 180? ball_degrees-360:ball_degrees;
-        //     int dir = ball_degrees2 > 0 ? ball_degrees + 30 : ball_degrees - 30;
-        //     dir = dir < 0? dir + 360: dir;
-            
-        //     preparePID(dir, 320);
-        // }
-        // centerGoalPostCamera(false);    
     }
     if(keeper_tookTimer && keeper_backToGoalPost && comrade) centerGoalPostCamera(true);       
 
