@@ -1,5 +1,11 @@
 //All defines go here
 
+//Multiply the speed by this factor to make the robot go a bit slower or faster, without having to change all the variables manually
+#define GLOBAL_SPD_MULT 0.9
+
+//LINES
+#define LINES_EXIT_SPD 350
+
 //STRIKER
 #define GOALIE_ATKSPD_LAT  255
 #define GOALIE_ATKSPD_BAK  350

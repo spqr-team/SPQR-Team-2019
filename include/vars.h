@@ -48,7 +48,7 @@
 #define S4I A1
 #define S4O A2
 
-#define LINE_THRESH 100
+#define LINE_THRESH 90
 #define UNLOCK_THRESH 2000
 #define EXTIME 100
 

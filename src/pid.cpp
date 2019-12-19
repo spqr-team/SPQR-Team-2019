@@ -76,8 +76,8 @@ void preparePID(int direction, int speed) { preparePID(direction, speed, 0); }
 void preparePID(int direction, int speed, int offset) {
   prevPidDir = globalDir;
 
-  globalDir = direction*f + prevPidDir* (1-f);
-
+  // globalDir = direction*f + prevPidDir* (1-f);
+  globalDir = direction;
   globalSpeed = speed;
   st = offset;
   while(st < -180) st += 360;

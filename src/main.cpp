@@ -59,12 +59,12 @@ void setup() {
   initUS();
   initSinCos();
 
+  initBluetooth();
+
   timertest = 0;
   delay(400);
-  initBluetooth();
   stopSetup();
 }
-
 
 void loop() {
   role = digitalRead(SWITCH_DX);                //se HIGH sono attaccante
@@ -91,11 +91,7 @@ void loop() {
       if(role) goalie();
       else keeper();
     } else {
-      if(role){
-        // goCenter();
-        preparePID(0,0,0);
-        digitalWrite(Y, LOW);
-      }
+      if(role) preparePID(0,0,0);
       else centerGoalPostCamera(true);
     }
   }else{
@@ -103,8 +99,22 @@ void loop() {
     else centerGoalPostCamera(true);
   }
 
-  AAANGOLO(); 
+  //Modify the speed BEFORE the line sensors checking (lines need to go to max speed possible)
+  // globalSpeed *= GLOBAL_SPD_MULT;
+
+  globalSpeed *= GLOBAL_SPD_MULT;
+  // AAANGOLO();
 
   checkLineSensors();                           //Last thing in loop, for priority
+
   drivePID(globalDir, globalSpeed);
+
 }
+
+//SQUARE TO TEST MOVEMENTS
+// if(timertest >= 0 && timertest < 1000) drivePID(0, 250);
+// else if(timertest >= 1000 && timertest < 2000) drivePID(90, 250);
+// else if(timertest >= 2000 && timertest < 3000) drivePID(180, 250);
+// else if(timertest >= 3000 && timertest < 4000) drivePID(270, 250);
+// else timertest = 0;
+

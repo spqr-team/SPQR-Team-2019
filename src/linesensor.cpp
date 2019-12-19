@@ -6,6 +6,7 @@
 #include "music.h"
 #include "vars.h"
 #include "nano_ball.h"
+#include "config.h"
 #include <Arduino.h>
 
 int linepinsI[4] = {S1I, S2I, S3I, S4I};
@@ -24,15 +25,9 @@ byte linesensbyte;
 byte linesensbytefst;
 byte linesensbyteOLDY;
 byte linesensbyteOLDX;
-byte linesensbyteOfst;
-byte linesensbyteOOLDY;
-byte linesensbyteOOLDX;
 
 bool fboundsX;
 bool fboundsY;
-
-bool fboundsOX;
-bool fboundsOY;
 
 int outDir;
 int outVel;
@@ -51,127 +46,125 @@ void checkLineSensors() {
   }
 
   if ((linesensbyteI > 0) || (linesensbyteO > 0)) {
-      fboundsOX = true;
-      fboundsOY = true;
+    vyp = 0;
+    vyn = 0;
+    vxp = 0;
+    vxn = 0;
     if(exitTimer > EXTIME) {
       fboundsX = true;
       fboundsY = true;
-
     }
     exitTimer = 0;
   }
 
-  // linesensbyte |= (linesensbyteI | linesensbyteO);
-  linesensbyteI |= (linesensbyteI | linesensbyteO);
+  linesensbyte |= (linesensbyteI | linesensbyteO);
 
   outOfBounds();
 }
 
 void outOfBounds(){
-    handleExtern();
-    handleIntern();
-  }
 
-void handleExtern (){
-    if((linesensbyteI & 0b00000001) == 1) vyp = 1;  // esclusione
-    if((linesensbyteI & 0b00000100) == 4) vyn = 1;
-    if((linesensbyteI & 0b00000010) == 2) vxp = 1;
-    if((linesensbyteI & 0b00001000) == 8) vxn = 1;
-}
-
-void handleIntern(){
   if(fboundsX == true) {
-    if(linesensbyteI & 0x02) linesensbyteOLDX = 2;
-    else if(linesensbyteI & 0x08) linesensbyteOLDX = 8;
+    if(linesensbyte & 0x02) linesensbyteOLDX = 2;
+    else if(linesensbyte & 0x08) linesensbyteOLDX = 8;
     if(linesensbyteOLDX != 0) fboundsX = false;
   }
   if(fboundsY == true) {
-    if(linesensbyteI & 0x01) linesensbyteOLDY = 1;
-    else if(linesensbyteI & 0x04) linesensbyteOLDY = 4;
+    if(linesensbyte & 0x01) linesensbyteOLDY = 1;
+    else if(linesensbyte & 0x04) linesensbyteOLDY = 4;
     if(linesensbyteOLDY != 0) fboundsY = false;
   }
+
   if (exitTimer <= EXTIME){
-    canUnblock = false;
+    //fase di rientro
+    if(linesensbyte == 15) linesensbyte = linesensbyteOLDY | linesensbyteOLDX;        //ZOZZATA MAXIMA
     unlockTime = millis();
 
-    //fase di rientro
-    if(linesensbyteI == 15) {
-      linesensbyteI = linesensbyteOLDY | linesensbyteOLDX;        //ZOZZATA MAXIMA
-      //digitalWrite(Y, HIGH);
+    if(linesensbyte == 1) outDir = 180;
+    else if(linesensbyte == 2) outDir = 270;
+    else if(linesensbyte == 4) outDir = 0;
+    else if(linesensbyte == 8) outDir = 90;
+    else if(linesensbyte == 3) outDir = 225;
+    else if(linesensbyte == 6) outDir = 315;
+    else if(linesensbyte == 12) outDir = 45;
+    else if(linesensbyte == 9) outDir = 135;
+    else if(linesensbyte == 7) outDir = 270;
+    else if(linesensbyte == 13) outDir = 90;
+    else if(linesensbyte == 11) outDir = 180;
+    else if(linesensbyte == 14) outDir = 0;
+    else if(linesensbyte == 5){
+      if(linesensbyteOLDX == 2) outDir = 270;
+      else if(linesensbyteOLDY == 8) outDir = 90;
+    }
+    else if(linesensbyte == 10){
+      if(linesensbyteOLDY == 4) outDir = 0;
+      else if(linesensbyteOLDY == 1) outDir = 180;
     }
 
-    switch(linesensbyteI){
-      case 1:
-        outDir = 180;
-        break;
-      case 2:
-        outDir = 270;
-        break;
-      case 4:
-        outDir = 0;
-        break;
-      case 8:
-        outDir = 90;
-        break;
-      case 3:
-        outDir = 225;
-        break;
-      case 6:
-        outDir = 315;
-        break;
-      case 12:
-        outDir = 45;
-        break;
-      case 9:
-        outDir = 135;
-        break;
-      case 7:
-        outDir = 270;
-        break;
-      case 13:
-        outDir = 90;
-        break;
-      case 11:
-        outDir = 180;
-        break;
-      case 14:
-        outDir = 0;
-        break;
-      case 5:
-        //digitalWrite(R, HIGH);
-        if(linesensbyteOLDX == 2) outDir = 270;
-        if(linesensbyteOLDX == 8) outDir = 90;
-        break;
-      case 10:
-        if(linesensbyteOLDY == 4) outDir = 0;
-        if(linesensbyteOLDY == 1)outDir = 180;
-        break;
-      case 15:
-        break;
-      case 0:
-      default:
-        //;)
-        break;
-    }
-
-    if(exitTimer < 45) outVel = 350;
-    else outVel = 320;
+    outVel = LINES_EXIT_SPD;
     preparePID(outDir, outVel, 0);
     
-    // tone(30, LA3);
     keeper_backToGoalPost = true;
     keeper_tookTimer = true;
   }else{
-    linesensbyteI = 0;
+    //fine rientro
+    if(linesensbyte == 1) vyp = 1;
+    else if(linesensbyte == 2) vxp = 1;
+    else if(linesensbyte == 4) vyn = 1;
+    else if(linesensbyte == 8) vxn = 1;
+    else if(linesensbyte == 3) {
+      vyp = 1;
+      vxp = 1;
+    }
+    else if(linesensbyte == 6){
+      vxp = 1;
+      vyn = 1;
+    }
+    else if(linesensbyte == 12) {
+      vyn = 1;
+      vxn = 1;
+    }
+    else if(linesensbyte == 9) {
+      vyp = 1;
+      vxn = 1;
+    }
+    else if(linesensbyte == 7) {
+      vyp = 1;
+      vyn = 1;
+      vxp = 1;
+    }
+    else if(linesensbyte == 13){
+      vxp = 1;
+      vxn = 1;
+      vyn = 1;
+    }
+    else if(linesensbyte == 11) {
+      vyp = 1;
+      vxn = 1;
+      vxp = 1;
+    }
+    else if(linesensbyte == 14) {
+      vyn = 1;
+      vxn = 1;
+      vxp = 1;
+    }
+    else if(linesensbyte == 5){
+      if(linesensbyteOLDX == 2) vyp = 1;
+      else if(linesensbyteOLDY == 8)vyn = 1;
+    }
+    else if(linesensbyte == 10){
+      if(linesensbyteOLDY == 4) vyn = 1;
+      else if(linesensbyteOLDY == 1) vyp = 1;
+    }
+
+    linesensbyte = 0;
     linesensbyteOLDY = 0;
     linesensbyteOLDX = 0;
     lineSensByteBak = 30;
+
     canUnblock = true;
   }
-
-   lineSensByteBak = linesensbyteI;
-   if(exitTimer == 99) slow = true;
-   else slow = false;
+   lineSensByteBak = linesensbyte;
 }
 
 void testLineSensors() {
@@ -184,7 +177,7 @@ void testLineSensors() {
     DEBUG_PRINT.print(" | ");
   }
   DEBUG_PRINT.println();
-  DEBUG_PRINT.print("________________");
+  DEBUG_PRINT.println("________________");
 
   DEBUG_PRINT.println("Byte:    ");
   DEBUG_PRINT.print(linesensbyteO);
