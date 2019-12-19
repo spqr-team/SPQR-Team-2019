@@ -409,13 +409,15 @@ void centerGoalPostCamera(bool checkBack) {
     preparePID(90, CENTERGOALPOST_VEL1);
   }else if(fixCamIMU(pDef) > CENTERGOALPOST_CAM_MIN && fixCamIMU(pDef) < CENTERGOALPOST_CAM_MAX){
     if(!ball_seen) preparePID(0, 0, 0);
-    if(us_px > CENTERGOALPOST_US_MAX && checkBack){
-      preparePID(180, CENTERGOALPOST_VEL1);
-    } else{
-      if(us_px < CENTERGOALPOST_US_CRITIC) preparePID(0, 150);
+    if(checkBack){
+      if(us_px > CENTERGOALPOST_US_MAX){
+        preparePID(180, CENTERGOALPOST_VEL2);
+      } else{
+        if(us_px < CENTERGOALPOST_US_CRITIC) preparePID(0, CENTERGOALPOST_VEL3);
 
-      keeper_backToGoalPost = false;
-      keeper_tookTimer = false;
+        keeper_backToGoalPost = false;
+        keeper_tookTimer = false;
+      }
     }
   }
 }

@@ -103,9 +103,9 @@ void outOfBounds(){
 
     outVel = LINES_EXIT_SPD;
     preparePID(outDir, outVel, 0);
-    
     keeper_backToGoalPost = true;
     keeper_tookTimer = true;
+    
   }else{
     //fine rientro
     if(linesensbyte == 1) vyp = 1;

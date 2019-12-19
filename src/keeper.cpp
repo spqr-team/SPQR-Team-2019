@@ -22,8 +22,6 @@ elapsedMillis toh = 0;
 
 void keeper() {
     
-    digitalWrite(Y, HIGH);
-    
     if(ball_distance > KEEPER_ATTACK_DISTANCE){
         // Ball is quite near
         goalie();
@@ -39,17 +37,17 @@ void keeper() {
         angle = (90 + ball_degrees) * M_PI / 180;
         angleX = abs(cos(angle));
 
-        if(ball_degrees >= 0 && ball_degrees <= 90 && fixCamIMU(pDef) < 30) preparePID(90, KEEPER_BASE_VEL*angleX*KEEPER_VEL_MULT);
-        else if(ball_degrees >= 270 && ball_degrees <= 360  && fixCamIMU(pDef) > -30) preparePID(270, KEEPER_BASE_VEL*angleX*KEEPER_VEL_MULT);
-        else if(ball_degrees < 270 && ball_degrees > 90){
-            int ball_degrees2 = ball_degrees > 180? ball_degrees-360:ball_degrees;
-            int dir = ball_degrees2 > 0 ? ball_degrees + KEEPER_BALL_BACK_ANGLE : ball_degrees - KEEPER_BALL_BACK_ANGLE;
-            dir = dir < 0? dir + 360: dir;
+        if(ball_degrees >= 0 && ball_degrees <= KEEPER_ANGLE_DX && fixCamIMU(pDef) < 30) preparePID(90, KEEPER_BASE_VEL*angleX*KEEPER_VEL_MULT);
+        else if(ball_degrees >= KEEPER_ANGLE_SX && ball_degrees <= 360  && fixCamIMU(pDef) > -30) preparePID(270, KEEPER_BASE_VEL*angleX*KEEPER_VEL_MULT);
+        else if(ball_degrees < KEEPER_ANGLE_SX && ball_degrees > KEEPER_ANGLE_DX){
+            ballBack();
+            // int ball_degrees2 = ball_degrees > 180? ball_degrees-360:ball_degrees;
+            // int dir = ball_degrees2 > 0 ? ball_degrees + KEEPER_BALL_BACK_ANGLE : ball_degrees - KEEPER_BALL_BACK_ANGLE;
+            // dir = dir < 0? dir + 360: dir;
             
-            preparePID(dir, KEEPER_BASE_VEL);
+            // preparePID(dir, KEEPER_BASE_VEL);
         }
-        centerGoalPostCamera(false);    
-        if(keeper_tookTimer && keeper_backToGoalPost && comrade) centerGoalPostCamera(true);       
+        centerGoalPostCamera(true);    
         
             // if(ball_degrees >= 0 && ball_degrees <= 90) preparePID(90, 320*angleX*1.2);
         // else if(ball_degrees >= 270 && ball_degrees <= 360) preparePID(270, 320*angleX*1.2);
@@ -62,4 +60,6 @@ void keeper() {
         // }
         // centerGoalPostCamera(false);    
     }
+    if(keeper_tookTimer && keeper_backToGoalPost && comrade) centerGoalPostCamera(true);       
+
 }
